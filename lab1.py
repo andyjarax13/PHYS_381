@@ -18,7 +18,7 @@ I = df["I"]
 I_A = df_A["I"]
 I_P = df_P["I"]
 
-I_e = df["I_e"]
+I_e = df["I_e"]*2
 I_e_A = df_A["I_e"]
 I_e_P = df_P["I_e"]
 
@@ -26,7 +26,7 @@ V = df["V"]
 V_A = df_A["V"]
 V_P = df_P["V"]
 
-V_e = df["V_e"]
+V_e = df["V_e"]*30
 V_e_A = df_A["V_e"]
 V_e_P = df_P["V_e"]
 
@@ -43,9 +43,16 @@ error = (e_m - e_m_actual)/e_m_actual
 
 print(e_m, error)
 
+m, b, r_value, p_value, std_err = linregress(x, V)
+print(type(m))
+
+
+linear = m * np.linspace(min(x), max(x), len(x)) + b
+x2 = np.linspace(min(x), max(x), len(x))
+
 plt.figure(figsize=(10,5))
-#plt.plot(x, V, ".")
-plt.errorbar(x, V, V_e, x_e, ".r", ecolor="blue", capsize=1)
+plt.plot(x2, linear, "g")
+plt.errorbar(x, V, V_e, x_e, ".r", ecolor="blue", capsize=0)
 #plt.xscale("log")
 #plt.yscale("log")
 plt.title("Collector Curve for $I_b$")
@@ -55,7 +62,8 @@ plt.grid()
 plt.tight_layout()
 plt.savefig("lab1_1")
 
-m, b, r_value, p_value, std_err = linregress(x, V)
+
 
 error = 100*(m - e_m_actual)/e_m_actual
 print(error)
+print(linregress(x, V))
