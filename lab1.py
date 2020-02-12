@@ -4,11 +4,15 @@ import scipy.constants as c
 from scipy.stats import linregress
 import matplotlib.pyplot as plt
 import pandas as pd
+import math
 
 df = pd.read_csv("lab1.csv")
-df = df[df["Direction"] == " A"]
-df_A = df[df["Direction"] == " A"]
-df_P = df[df["Direction"] == " P"]
+
+#df = df.loc[df["Trial"].isin([5,6,7,8,9,10,11,12])]
+
+df = df.loc[df["Direction"].isin([" A"])]
+df_A = df.loc[df["Direction"].isin([" A"])]
+df_P = df.loc[df["Direction"].isin([" P"])]
 
 R = df["R"]
 R_A = df_A["R"]
@@ -30,6 +34,9 @@ V_e = df["V_e"]*30
 V_e_A = df_A["V_e"]
 V_e_P = df_P["V_e"]
 
+
+
+
 N = 72 # Coils
 a = 0.33 # Radius of coil
 Be = -36.11e-6 # [T]
@@ -41,10 +48,33 @@ e_m = V/x
 e_m_actual = 1.758820e11
 error = (e_m - e_m_actual)/e_m_actual
 
-print(e_m, error)
-
 m, b, r_value, p_value, std_err = linregress(x, V)
-print(type(m))
+
+
+
+
+Bh1 = (8*c.mu_0*N*I_P)/((125)**(1/2)*a)
+Bh1 = Bh1.reset_index(drop=True)
+Bh2 = (8*c.mu_0*N*I_A)/((125)**(1/2)*a)
+Bh2 = Bh2.reset_index(drop=True)
+
+
+V_P = V_P.reset_index(drop=True)
+V_A = V_A.reset_index(drop=True)
+
+print(Bh1)
+print(Bh2)
+print(V_A)
+print(V_P)
+Bex = ((np.sqrt(V_P)*Bh2) - (np.sqrt(V_A)*Bh1))/((np.sqrt(V_P))+(np.sqrt(V_A)))
+print(Bex)
+
+print(np.mean(Bex))
+print(np.std(Bex))
+
+
+
+
 
 
 linear = m * np.linspace(min(x), max(x), len(x)) + b
